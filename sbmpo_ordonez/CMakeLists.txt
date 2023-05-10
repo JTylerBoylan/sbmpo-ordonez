@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(sbmpo_ordonez)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 include_directories(include)
 
