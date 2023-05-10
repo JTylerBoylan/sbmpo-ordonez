@@ -20,4 +20,4 @@ endif()
 
 # Add subdirectories for each project
 add_subdirectory(sbmpo)
-add_subdirectory(my_project)
+add_subdirectory(sbmpo_ordonez)
