@@ -1,4 +1,5 @@
 #include <sbmpo_ordonez/ForceMomentumUnicycleModel.hpp>
+#include <sbmpo_ordonez/ForcedAckermannSteeringModel.hpp>
 #include <sbmpo/benchmarks/Benchmark.hpp>
 
 using namespace sbmpo;
@@ -19,7 +20,8 @@ int main (int argc, char ** argv) {
     }
 
     // Create new UnicycleSteering benchmark
-    Benchmark<ForceMomentumUnicycleModel> benchmarker(csv_folder);
+    //Benchmark<ForceMomentumUnicycleModel> benchmarker(csv_folder);
+    Benchmark<ForcedAckermannSteeringModel> benchmarker(csv_folder);
 
     // Change benchmark parameters
     benchmarker.set_runs_per_param(1);

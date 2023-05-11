@@ -24,25 +24,18 @@ class ForceMomentumUnicycleModel : public Model {
 
     // Constructor
     ForceMomentumUnicycleModel() {
+
         integration_steps_ = 50;
 
-        threshold_X_ = 0.2f;
-        threshold_Y_ = 0.2f;
-        threshold_V_ = 1.0f;
+        threshold_X_ = 0.5f;
+        threshold_Y_ = 0.5f;
 
-        max_acc_ = 2.0f; // adjust according to force samples
-        min_acc_ = -2.0f;
         max_steering_rate_ = 1.82;
 
         min_vel_ = -2.0f;
         max_vel_ = 5.0f;
 
-        mass_ = 250.0f;
-        minimum_turn_radius_ = 2.74f;
-
-        I_ = 5.0f;
-        g_ = 9.8f;
-        r_ = 0.2;
+        mass_ = 500.0f;
     }
 
     // Evaluate a node with a control
@@ -77,124 +70,34 @@ class ForceMomentumUnicycleModel : public Model {
         const float dx = goal[X] - state[X];
         const float dy = goal[Y] - state[Y];
         const float dq = std::abs(atan2f(dy,dx) - state[Q]);
-        return sqrtf(dx*dx + dy*dy)/max_vel_ + std::abs(dq < M_PI ? dq : M_2PI - dq)/(max_steering_rate_);
+        return sqrtf(dx*dx + dy*dy)/max_vel_; // + std::abs(dq < M_PI ? dq : M_2PI - dq)/(max_steering_rate_);
     }
 
     // Determine if node is valid
     virtual bool is_valid(const State& state) {
-
-        return state[V] > min_vel_ &&
-               state[V] < max_vel_;
+        return state[V] >= min_vel_ &&
+               state[V] <= max_vel_;
     }
 
     // Determine if state is goal
     virtual bool is_goal(const State& state, const State& goal) {
-       
         return std::abs(goal[X] - state[X]) <= threshold_X_ &&
                std::abs(goal[Y] - state[Y]) <= threshold_Y_;
     }
 
-    /// @brief Set the goal threshold X value
-    void set_goal_threshold_X(float goal_threshold_X)
-    {
-        threshold_X_ = goal_threshold_X;
-    }
-
-    /// @brief Set the goal threshold Y value
-    void set_goal_threshold_Y(float goal_threshold_Y)
-    {
-        threshold_Y_ = goal_threshold_Y;
-    }
-
-    /// @brief Set the goal threshold V value
-    void set_goal_threshold_V(float goal_threshold_V)
-    {
-        threshold_V_ = goal_threshold_V;
-    }
-
-    /// @brief Set the minimum acceleration value
-    void set_min_acceleration(float min_acceleration)
-    {
-        min_acc_ = min_acceleration;
-    }
-
-    /// @brief Set the maximum acceleration value
-    void set_max_acceleration(float max_acceleration)
-    {
-        max_acc_ = max_acceleration;
-    }
-
-    /// @brief Set the minimum acceleration value
-    void set_min_velocity(float min_velocity)
-    {
-        min_vel_ = min_velocity;
-    }
-
-    /// @brief Set the maximum velocity value
-    void set_max_velocity(float max_velocity)
-    {
-        max_vel_ = max_velocity;
-    }
-
-    /// @brief Set the mass value
-    void set_mass(float mass)
-    {
-        mass_ = mass;
-    }
-
-    /// @brief Set the gravitational value
-    void set_gravity(float gravity)
-    {
-        g_ = gravity;
-    }
-
-    /// @brief Set the radius value
-    void set_radius(float radius)
-    {
-        r_ = radius;
-    }
-
-    /// @brief Set the moment of inertia value
-    void set_I(float I)
-    {
-        I_ = I;
-    }
-
-    /// @brief Set the vehicle minimum turn radius
-    void set_minimum_turn_radius(float minimum_turn_radius)
-    {
-        minimum_turn_radius_ = minimum_turn_radius;
-    }
-
-    /// @brief Set the number of integration steps (Euler)
-    void set_integration_steps(int integration_steps)
-    {
-        integration_steps_ = integration_steps;
-    }
-
-
-    /// @brief Set the max steering rate
-    void set_max_steering_rate(float max_steering_rate)
-    {
-        max_steering_rate_ = max_steering_rate;
-    }
-
 protected:
+
+    float integration_steps_;
+
+    float mass_;
+
+    float min_vel_;
+    float max_vel_;
+    float max_steering_rate_;
+    float min_turn_radius_;
 
     float threshold_X_;
     float threshold_Y_;
-    float threshold_V_;
-    float min_acc_;
-    float max_acc_;
-    float min_vel_;
-    float max_vel_;
-    float minimum_turn_radius_;
-    float mass_;
-    float I_;
-    float r_;
-    float g_;
-    float integration_steps_;
-    float max_steering_rate_;
 
 };
 

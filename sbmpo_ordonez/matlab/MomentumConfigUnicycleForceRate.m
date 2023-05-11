@@ -93,13 +93,13 @@ params.max_iterations = 200000;
 
 params.max_generations = 100;
 
-params.horizon_time = 0.2;
+params.horizon_time = 0.5;
 params.num_states = 4;
 params.num_controls = 2;
-params.grid_resolution = [0.01; 0.01; 0.2; 0];
+params.grid_resolution = [0.025; 0.025; 0.025; -1];
 
-params.start_state = [-1; 0; 0; 0];
-params.goal_state =  [6; 0; 0; 0]; 
+params.start_state = [0; 0; 0; 0];
+params.goal_state =  [15; 15; 0; 0]; 
 
 %params.goal_state =  [patch_start; min_vel_required; 0]; 
 
