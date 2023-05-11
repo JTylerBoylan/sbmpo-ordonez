@@ -69,7 +69,7 @@ class ForceMomentumUnicycleModel : public Model {
     virtual float heuristic(const State& state, const State& goal) {
         const float dx = goal[X] - state[X];
         const float dy = goal[Y] - state[Y];
-        const float dq = std::abs(atan2f(dy,dx) - state[Q]);
+        //const float dq = std::abs(atan2f(dy,dx) - state[Q]);
         return sqrtf(dx*dx + dy*dy)/max_vel_; // + std::abs(dq < M_PI ? dq : M_2PI - dq)/(max_steering_rate_);
     }
 
