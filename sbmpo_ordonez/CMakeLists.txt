@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(sbmpo_ordonez)
+project(my_project)
 
 set(CMAKE_BUILD_TYPE Release)
 

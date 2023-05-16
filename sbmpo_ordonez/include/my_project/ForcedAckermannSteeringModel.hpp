@@ -3,6 +3,7 @@
 
 #include <sbmpo/types/types.hpp>
 #include <sbmpo/models/AckermannSteeringModel.hpp>
+#include <math.h>
 
 namespace sbmpo_ordonez {
 
@@ -27,6 +28,13 @@ public:
         const float acc = control[Fx] / mass_;
         const Control new_control = {acc, control[dGdt]};
         return AckermannSteeringModel::next_state(state, new_control, time_span);
+    }
+
+    float heuristic(const State& state, const State& goal) override {
+        const float dx = goal[X] - state[X];
+        const float dy = goal[Y] - state[Y];
+        const float dq = std::abs(atan2f(dy,dx) - state[Q]);
+        return sqrtf(dx*dx + dy*dy)/max_velocity_ + std::abs(dq < M_PI ? dq : M_2PI - dq)/(max_velocity_*max_turn_angle_*inv_wheel_base_length_);
     }
 
 private:

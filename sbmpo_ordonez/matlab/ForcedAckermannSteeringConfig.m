@@ -3,7 +3,6 @@
 
 clear
 close all
-clc
 
 %% Parameters
 
@@ -16,7 +15,7 @@ params.horizon_time = 0.25;
 params.num_states = 5;
 params.num_controls = 2;
 params.grid_resolution = [0.025; 0.025; 0.005; -1; -1];
-params.start_state = [-10; -10; pi/4; 0; 0];
+params.start_state = [-10; -10; 0; 0; 0];
 params.goal_state = [10; 10; 0; 0; 0];
 params.branchout_factor = 9;
 params.branchouts = [
@@ -38,8 +37,8 @@ sbmpo_config("../csv/config.csv", params, runs);
 %% Generate some obstacles
 
 obs = struct;
-obs.min_n = 0;
-obs.max_n = 0;
+obs.min_n = 3;
+obs.max_n = 3;
 obs.min_x = -5;
 obs.max_x = 5;
 obs.min_y = -5;

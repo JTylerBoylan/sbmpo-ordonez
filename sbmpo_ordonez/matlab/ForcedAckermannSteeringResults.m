@@ -1,40 +1,58 @@
-%%
+% 2D Obstacle Path Results (Grid2D, Unicycle, Ackermann)
 
-clc
-clear
 close all
 
+goal_r = 1.0;
+start_state = params.start_state;
+goal = params.goal_state;
+
 stats = sbmpo_stats("../csv/stats.csv");
-[path, nodes] = sbmpo_results("../csv/nodes.csv");
+[paths, nodes] = sbmpo_results("../csv/nodes.csv");
+obstacles = sbmpo_obstacles("../csv/obstacles.csv");
 
-%% Nodes
+% Convert path states to points and plot
+for p = 1:length(paths)
 
-node_count = nodes.buffer_size;
-num_states = 5;
-num_controls = 2;
-state = reshape([nodes.nodes.state], [num_states node_count]);
+    figure('Color', [1 1 1])
+    hold on
+    grid on
 
-x = state(1,:);
-y = state(2,:);
-q = state(3,:);
-v = state(4,:);
-g = state(5,:);
+    title(strcat("Results ", int2str(p)))
+    xlabel("X (m)")
+    ylabel("Y (m)")
 
-%% Path
+    % Plot obstacles
+    for o = 1:obstacles(p).n
+        obs = [obstacles(p).x(o)-obstacles(p).r(o) obstacles(p).y(o)-obstacles(p).r(o) ...
+            obstacles(p).r(o)*2 obstacles(p).r(o)*2];
+        rectangle('Position', obs, 'Curvature', [1,1], 'FaceColor', 'k')
+    end
 
-path_count = path.path_size;
-pstate = reshape([path.nodes.state], [num_states path_count]);
+    % Plot goal
+    goal_point = [goal(1)-goal_r goal(2)-goal_r goal_r*2 goal_r*2];
+    rectangle('Position', goal_point, 'Curvature', [1,1], 'FaceColor', 'b')
 
-px = pstate(1,:);
-py = pstate(2,:);
-pq = pstate(3,:);
-pv = pstate(4,:);
-pg = pstate(5,:);
+    % Plot all nodes
+    nx = zeros(1, nodes(p).buffer_size);
+    ny = zeros(1, nodes(p).buffer_size);
+    for n = 1:nodes(p).buffer_size
+        node = nodes(p).nodes(n);
+        nx(n) = node.state(1);
+        ny(n) = node.state(2); 
+    end
+    plot (nx, ny, 'ob', 'MarkerSize', 2, 'HandleVisibility', 'off')
+    
+    % Plot path
+    px = zeros(1, paths(p).path_size);
+    py = zeros(1, paths(p).path_size);
+    for n = 1:paths(p).path_size
+        node = paths(p).nodes(n);
+        px(n) = node.state(1);
+        py(n) = node.state(2);
+    end
+    plot (px, py, '-g', 'LineWidth', 5, 'DisplayName', 'SBMPO')
+    plot (px, py, 'ob', 'MarkerSize', 5, 'HandleVisibility', 'off')
+    
+    legend('Location','northwest')
 
-%% Plot
-
-figure
-hold on
-grid on
-plot(x,y,'ob') % all nodes
-plot(px,py,'-g','LineWidth',3) % path
+end
